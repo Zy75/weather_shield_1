@@ -31,7 +31,7 @@ I installed Debian linux on BBB.
 
 BBB sees arduino as /dev/ttyACM0(virtual serial) and python script ws.py receives the data.
 When I ssh from desktop PC to BBB, to keep the script running after ssh logout, I must use nohup command:
-[ nohup sudo -b python ws.py > /dev/null 2> /dev/null < /dev/null ] ( stdin, stdout and stderr are not used. So discard these using /dev/null ) 
+[ nohup sudo -b python ws.py > /dev/null 2> /dev/null < /dev/null ] ( -b means background, /dev/null means std IOs are not used. ) 
 
 When I want to check the system, login wirelessly using [ sudo ssh username@192.168.xx.xx ]
 
