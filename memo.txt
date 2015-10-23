@@ -1,0 +1,72 @@
+************ This document is mostly of my memo. *****************
+
+< overview >
+
+Sparkfun's weather shield is a arduino shield capable of measuring temperature, humidity, pressure, light_level and more. And by using optional "Weather Meters", measurement of rain, wind speed and wind direction are possble.
+
+The system I setup consists of Arduino Uno equipped with the weather shield, the Weather Meters and beaglebone black as a server.
+
+Arduino sends data to BeagleBone Black using serial interface and the data are stored in BBB's storage.  
+ 
+When check if the system is working is needed, ssh into BBB using Wifi.
+
+< why I did not use commercial weather station >
+
+There are weather station makers such as Davis, Oregon scientific, La crosse...
+But the biggest reason is I can't use these in Japan because of the radio law.
+
+< Arduino Uno + weather shield >
+
+Weather shield is a shield which means it is a board expanding arduino's functions.
+
+weather_shield_example.ino is the open source firmware of arduino downloadable at https://learn.sparkfun.com/tutorials/weather-shield-hookup-guide.
+And I wrote this program with Arduino IDE.
+
+USB-SERIAL converter is available and Arduino Uno's USB port can be used, so BBB receives data as virtual serial interface.
+ 
+
+< BeagleBone black (BBB) as a server >
+
+I installed Debian linux on BBB.
+
+BBB sees arduino as /dev/ttyACM0(virtual serial) and python script ws.py receives the data.
+When I ssh from desktop PC to BBB, to keep the script running after ssh logout, I must use nohup command:
+[ nohup sudo -b python ws.py > /dev/null 2> /dev/null < /dev/null ]
+
+When I want to check the system, login wirelessly using [ sudo ssh username@192.168.xx.xx ]
+
+Wifi adapter and Cable from Arduino must be used but there is only one USB port on BBB. And because of consuming current of Wifi adapter, self-powered USB-hub is needed.
+Wifi adapter I bought is BUFFALO WLI-UC-G301n. The sensitivity is good. 
+
+< wall box , wind meter and rain meter installation >
+
+Arduino+WeatherMeters, BBB, USB-hub, and AC-adapters is in MIRAI-KOGYO wall box. 
+
+I could use BK-32ZR(for BS CS antenna support) to install weather meters.
+http://www.amazon.co.jp/%E6%97%A5%E6%9C%AC%E3%82%A2%E3%83%B3%E3%83%86%E3%83%8A-BK-32ZR-%E3%82%A2%E3%83%B3%E3%83%86%E3%83%8A%E5%8F%96%E4%BB%98%E9%87%91%E5%85%B7/dp/B007LZ39NW/ref=sr_1_3?ie=UTF8&qid=1443757769&sr=8-3&keywords=%E3%82%A2%E3%83%B3%E3%83%86%E3%83%8A%E3%80%80%E9%87%91%E5%85%B7
+
+
+< memo of BBB debian software installation >
+
+write ssid and password in /etc/network/interfaces
+
+write rfkill unblock all , ifdown wlan1, ifup wlan1 in /etc/rc.local
+This is needed because wirelessLAN is disabled by rfkill by default.
+/etc/rc.local runs after systemd's multiusertarget
+
+< wind direction memo >
+Calculation of wind direction:
+Japan Meteorological Agency uses unit vector average method, in which ,all samplings are treated equal.
+
+(my memo)
+Wind direction:
+S 180
+W 270
+E 90
+N 0
+(when speed meter west and direction meter east)
+
+
+< other memo >
+There are pullup resistors in some pin of wind sensor, and rain sensor.
+
