@@ -10,7 +10,7 @@ Arduino sends data to BeagleBone Black using serial interface and the data are s
  
 When check if the system is working is needed, ssh into BBB using Wifi.
 
-< why I did not use commercial weather station >
+< why I don't use commercial weather station >
 
 There are weather station makers such as Davis, Oregon scientific, La crosse...
 But the biggest reason is I can't use these in Japan because of the radio law.
@@ -20,9 +20,9 @@ But the biggest reason is I can't use these in Japan because of the radio law.
 Weather shield is a shield which means it is a board expanding arduino's functions.
 
 weather_shield_example.ino is the open source firmware of arduino downloadable at https://learn.sparkfun.com/tutorials/weather-shield-hookup-guide.
-And I wrote this program with Arduino IDE.
+And I wrote this program to the flash memory with Arduino IDE.
 
-USB-SERIAL converter is available and Arduino Uno's USB port can be used, so BBB receives data as virtual serial interface.
+USB-SERIAL converter is available on Arduino Uno and its USB port can be used, so BBB receives data as virtual serial interface.
  
 
 < BeagleBone black (BBB) as a server >
@@ -31,7 +31,7 @@ I installed Debian linux on BBB.
 
 BBB sees arduino as /dev/ttyACM0(virtual serial) and python script ws.py receives the data.
 When I ssh from desktop PC to BBB, to keep the script running after ssh logout, I must use nohup command:
-[ nohup sudo -b python ws.py > /dev/null 2> /dev/null < /dev/null ]
+[ nohup sudo -b python ws.py > /dev/null 2> /dev/null < /dev/null ] ( stdin, stdout and stderr are not used. So discard these using /dev/null ) 
 
 When I want to check the system, login wirelessly using [ sudo ssh username@192.168.xx.xx ]
 
@@ -42,7 +42,7 @@ Wifi adapter I bought is BUFFALO WLI-UC-G301n. The sensitivity is good.
 
 Arduino+WeatherMeters, BBB, USB-hub, and AC-adapters is in MIRAI-KOGYO wall box. 
 
-I could use BK-32ZR(for BS CS antenna support) to install weather meters.
+I used BK-32ZR(product for BS CS antenna support) to install weather meters.
 http://www.amazon.co.jp/%E6%97%A5%E6%9C%AC%E3%82%A2%E3%83%B3%E3%83%86%E3%83%8A-BK-32ZR-%E3%82%A2%E3%83%B3%E3%83%86%E3%83%8A%E5%8F%96%E4%BB%98%E9%87%91%E5%85%B7/dp/B007LZ39NW/ref=sr_1_3?ie=UTF8&qid=1443757769&sr=8-3&keywords=%E3%82%A2%E3%83%B3%E3%83%86%E3%83%8A%E3%80%80%E9%87%91%E5%85%B7
 
 
@@ -56,7 +56,7 @@ This is needed because wirelessLAN is disabled by rfkill by default.
 
 < wind direction memo >
 Calculation of wind direction:
-Japan Meteorological Agency uses unit vector average method, in which ,all samplings are treated equal.
+Japan Meteorological Agency uses unit vector average method, in which ,all samplings regardless of wind speed are treated equal. In this project, weather_shield_example.ino uses the same method, and is OK.
 
 (my memo)
 Wind direction:
